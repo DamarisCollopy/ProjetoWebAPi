@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div class="row h-50">
+        <div class="col-sm-12 h-100 d-table">
+            <div class="card card-block d-table-cell align-middle">
+                <ul class="navbar-nav flex-grow-1">
+                    <partial name="_LoginPartial" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+}
