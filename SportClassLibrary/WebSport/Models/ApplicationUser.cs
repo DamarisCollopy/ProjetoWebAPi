@@ -31,6 +31,7 @@ namespace WebSport.Areas.Models
         [Required]
         [RegularExpression(@"^\d{8}(-\d{5})?$", ErrorMessage = "Invalid Zip Code.")]
         public string zipCode { get; set; }
+
         [Required]
         [StringLength(11, ErrorMessage = "Identifier too long (11 character limit).")]
         public string Identifier { get; set; }
