@@ -36,6 +36,7 @@ namespace DataIdentity.DataContext
                 .WithMany(user => user.Calendar)
                 .HasForeignKey(userEvent => userEvent.UserId)
                 .IsRequired();
+
             builder.Entity<UserEvent>()
                 .HasOne(userEvent => userEvent.Event)
                 .WithMany(_event => _event.Calendar)
@@ -50,8 +51,11 @@ namespace DataIdentity.DataContext
              .OnDelete(DeleteBehavior.Cascade)
              .IsRequired();
 
+            builder.Entity<Event>()
+             .HasOne(a => a.Address)
+             .WithOne(b => b.Event)
+             .HasForeignKey<EventAddress>(b => b.EventId)
+             .OnDelete(DeleteBehavior.Cascade);
         }
-
-
     }
 }
