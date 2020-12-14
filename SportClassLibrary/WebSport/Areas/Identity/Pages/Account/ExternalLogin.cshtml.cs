@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Domain.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using WebSport.Areas.Models;
+
 
 namespace WebSport.Areas.Identity.Pages.Account
 {
@@ -67,7 +66,7 @@ namespace WebSport.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Birth Date")]
             [DataType(DataType.Date)]
-            public DateTime birthDate { get; set; }
+            public System.DateTime birthDate { get; set; }
             public string Street { get; set; }
             public string Neighborhood { get; set; }
             public string City { get; set; }

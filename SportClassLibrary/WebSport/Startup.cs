@@ -1,4 +1,4 @@
-
+using Domain.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -8,11 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SportClassLibrary.Services;
 using System;
 using System.Security.Claims;
-using WebSport.Areas.Models;
-using WebSport.Data;
 
 namespace WebSport
 {
@@ -29,39 +26,10 @@ namespace WebSport
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<WebSportContext>(options =>
-               options.UseSqlServer(
-                   Configuration.GetConnectionString("WebSportContextConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<WebSportContext>();
-            services.AddRazorPages();
-
             // Envio de Email
             services.AddScoped<IEmailSender, EmailSender>();
             var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
-
-            // Protecao contra ataque de força bruta,5 min para poder voltar a tentar utilizar uma nova tentativa para entrar
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Default Lockout settings.
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-            });
-
-            // By default, Identity requires that passwords contain an uppercase character, lowercase character, a digit, and 
-            // a non-alphanumeric character. Passwords must be at least six characters long.
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Default Password settings.
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-            });
 
             services.AddAuthentication()
               .AddGoogle(googleOptions =>
@@ -78,20 +46,6 @@ namespace WebSport
                   googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Locality, "Street");
                   googleOptions.ClaimActions.MapJsonKey(ClaimTypes.StateOrProvince, "City");
               });
-
-            // Cookie
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                options.Cookie.Name = "YourAppCookieName";
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.LoginPath = "/Identity/Account/Login";
-                // ReturnUrlParameter requires 
-                //using Microsoft.AspNetCore.Authentication.Cookies;
-                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-                options.SlidingExpiration = true;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

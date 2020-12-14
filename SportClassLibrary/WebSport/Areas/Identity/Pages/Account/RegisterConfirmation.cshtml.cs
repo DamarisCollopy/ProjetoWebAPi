@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using WebSport.Areas.Models;
-using SportClassLibrary.Services;
+using Domain.Models;
+using Domain.Services;
 
 namespace WebSport.Areas.Identity.Pages.Account
 {
