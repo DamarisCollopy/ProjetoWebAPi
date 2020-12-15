@@ -12,7 +12,7 @@ namespace Domain.APIService
         public BaseApi()
         {
             Consumer = new HttpClient();
-            Consumer.BaseAddress = new Uri("https://localhost:44307/");
+            Consumer.BaseAddress = new Uri("https://localhost:44349/");
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Security.Claims;
+using WebSport.Models;
 
 namespace WebSport
 {
@@ -46,6 +48,11 @@ namespace WebSport
                   googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Locality, "Street");
                   googleOptions.ClaimActions.MapJsonKey(ClaimTypes.StateOrProvince, "City");
               });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped<IUser, AspNetUser>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
