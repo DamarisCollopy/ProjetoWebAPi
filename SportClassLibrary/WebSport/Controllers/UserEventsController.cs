@@ -118,38 +118,22 @@ namespace WebSport.Controllers
         // GET: UserEvents/Delete/5
         public async Task<IActionResult> Delete(string UserId)
         {
-            if (UserId == null)
+            UserEvent userEvent = new UserEvent();
+            HttpResponseMessage res = await _baseApi.Consumer.GetAsync($"api/UserEventsApi/{UserId}");
+            if (res.IsSuccessStatusCode)
             {
-                return NotFound();
+                var result = res.Content.ReadAsStringAsync().Result;
+                userEvent = JsonConvert.DeserializeObject<UserEvent>(result);
             }
-
-            var userEvent = await _context.UserEvents
-                .Include(u => u.Event)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserId == UserId);
-            if (userEvent == null)
-            {
-                return NotFound();
-            }
-
             return View(userEvent);
         }
 
         // POST: UserEvents/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string UserId, int EventId)
+        public async Task<IActionResult> DeleteConfirmed(UserEvent userEvents)
         {
-            var userEvent = await _context.UserEvents.FindAsync(UserId,EventId);
-            _context.UserEvents.Remove(userEvent);
-            await _context.SaveChangesAsync();
-
-            int idEvent = userEvent.EventId;
-            Event eventos = _context.Events.Find(idEvent);
-            eventos.numbParticipants -= 1;
-            eventos.confirmEvent = false;
-            _context.SaveChanges();
-
+            var delete = await _baseApi.Consumer.DeleteAsync($"api/UserEventsApi/{userEvents.UserId}");
             return RedirectToAction(nameof(Index));
         }
 

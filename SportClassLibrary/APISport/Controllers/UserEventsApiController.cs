@@ -67,10 +67,15 @@ namespace APISport.Controllers
         }
 
         // DELETE: api/UserEventsApi/5
-        [HttpDelete("{EventId}")]
-        public async Task<ActionResult<UserEvent>> DeleteUserEvent(string UserId, int EventId)
+        [HttpDelete("{UserId}")]
+        public async Task<ActionResult<UserEvent>> DeleteUserEvent(string UserId)
         {
-            var userEvent = await _context.UserEvents.FindAsync(EventId,UserId);
+
+            var userEvent = await _context.UserEvents
+                .Include(u => u.Event)
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(m => m.UserId.Contains(UserId));
+
             _context.UserEvents.Remove(userEvent);
             await _context.SaveChangesAsync();
 
@@ -78,14 +83,10 @@ namespace APISport.Controllers
             Event eventos = _context.Events.Find(idEvent);
             eventos.numbParticipants -= 1;
             eventos.confirmEvent = false;
+            eventos.waitEvent = true;
             _context.SaveChanges();
 
             return userEvent;
-        }
-
-        private bool UserEventExists(string id)
-        {
-            return _context.UserEvents.Any(e => e.UserId == id);
         }
     }
 }
