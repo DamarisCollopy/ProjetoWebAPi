@@ -8,21 +8,22 @@ namespace DataIdentity.DataContext
 {
     public class WebSportContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
+        public WebSportContext()
+        {
+        }
         public WebSportContext(DbContextOptions<WebSportContext> options)
             : base(options)
         {
         }
 
         public DbSet<Event> Events { get; set; }
-        public DbSet<EventAddress> EventAddresses { get; set; }
         public DbSet<SportGame> SportGames { get; set; }
-        public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<UserEvent> UserEvents { get; set; }
         public DbSet<FriendsList> friendsLists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // optionsBuilder.UseSqlServer(@"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=WebSport;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+             //optionsBuilder.UseSqlServer(@"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=WebSport;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -37,12 +38,6 @@ namespace DataIdentity.DataContext
                 .HasForeignKey(userEvent => userEvent.UserId)
                 .IsRequired();
 
-            builder.Entity<UserEvent>()
-                .HasOne(userEvent => userEvent.Event)
-                .WithMany(_event => _event.Calendar)
-                .HasForeignKey(userEvent => userEvent.EventId)
-                .IsRequired();
-
             builder.Entity<FriendsList>()
             .HasOne(c => c.ApplicationUser)
              .WithMany(x => x.friends)
@@ -52,10 +47,13 @@ namespace DataIdentity.DataContext
              .IsRequired();
 
             builder.Entity<Event>()
-             .HasOne(a => a.Address)
-             .WithOne(b => b.Event)
-             .HasForeignKey<EventAddress>(b => b.EventId)
-             .OnDelete(DeleteBehavior.Cascade);
+           .HasOne(c => c.Organizer)
+            .WithMany(x => x.MyEvents)
+            .HasForeignKey(f => f.OrganizerId)
+            .HasConstraintName("OrganizerId")
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
         }
     }
 }

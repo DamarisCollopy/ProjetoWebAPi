@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Domain.Table.UserEvent>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Event.MaxParticipants)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event.numbParticipants)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event.SportGame)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event.waitEvent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event.confirmEvent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.MaxParticipants)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.numbParticipants)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.SportGame)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.waitEvent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.confirmEvent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Name)
+            </td>
+            <td>
+            
+                @Html.ActionLink("Details", "Details", new { item.EventId }) |
+                @Html.ActionLink("Delete", "Delete", new {item.EventId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

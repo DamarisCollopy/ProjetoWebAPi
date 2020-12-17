@@ -12,12 +12,41 @@ namespace Domain.Table
         [Key]
         public int Id { get; set; }
 
-        // Número máximo de participantes, não obrigatório
+        [Required]
         public int MaxParticipants { get; set; }
 
-        // Hora de início e fim
+        public int numbParticipants { get; set; }
+
+        [Required]
+        [Display(Name = "Day of the event")]
+        [DataType(DataType.Date)]
+        public DateTime Day { get; set; }
+
+        [Display(Name = "StartTime")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH}")]
         public DateTime StartTime { get; set; }
+
+        [Display(Name = "EndTime")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH}")]
         public DateTime EndTime { get; set; }
+
+        [Display(Name = "Street")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage =
+            "Numbers and special characters are not allowed in the street.")]
+        public string Street { get; set; }
+        [Display(Name = "Neighborhood")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage =
+           "Numbers and special characters are not allowed in the neighborhood.")]
+        public string Neighborhood { get; set; }
+
+        [Display(Name = "City")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage =
+           "Numbers and special characters are not allowed in the city.")]
+        public string City { get; set; }
+        public bool waitEvent { get; set; }
+        public bool confirmEvent { get; set; }
 
         // Estabelecendo relação "Many-to-One" com Usuário
         // 1 Evento é criado por um Usuário
@@ -25,18 +54,7 @@ namespace Domain.Table
         [ForeignKey("Organizer")]
         public string OrganizerId { get; set; }
         public ApplicationUser Organizer { get; set; }
-
-        // Estabelecendo relação de Many-to-Many com Usuários
-        // 1 Evento pode ter N Participantes
-        // 1 Usuário pode participar de N Eventos
-        public ICollection<UserEvent> Calendar { get; set; }
-
-        // Estabelecendo a relação One-to-One com `EventAddress`
-        [ForeignKey("Address")]
-        public int AddressId { get; set; }
-        [Required]
-        public EventAddress Address { get; set; }
-
+     
         // Estabelecendo a relação "Many-to-One" com `Sport`
         // 1 esporte pode compor N eventos
         // 1 evento tem apenas 1 esporte
@@ -44,5 +62,6 @@ namespace Domain.Table
         public int SportId { get; set; }
         [Required]
         public SportGame SportGame { get; set; }
+
     }
 }

@@ -1,3 +1,4 @@
+using DataIdentity.Repository;
 using Domain.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -52,7 +53,7 @@ namespace WebSport
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IUser, AspNetUser>();
-
+            services.AddTransient<IBaseContext, BaseContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

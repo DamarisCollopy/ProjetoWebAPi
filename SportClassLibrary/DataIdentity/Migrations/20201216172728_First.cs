@@ -193,83 +193,37 @@ namespace DataIdentity.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAddresses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Street = table.Column<string>(nullable: false),
-                    Number = table.Column<int>(nullable: false),
-                    Complement = table.Column<string>(nullable: true),
-                    Neighbourhood = table.Column<string>(nullable: false),
-                    City = table.Column<string>(nullable: false),
-                    State = table.Column<string>(nullable: false),
-                    ZipCode = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAddresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserAddresses_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MaxParticipants = table.Column<int>(nullable: false),
+                    numbParticipants = table.Column<int>(nullable: false),
+                    Day = table.Column<DateTime>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    OrganizerId = table.Column<string>(nullable: true),
-                    AddressId = table.Column<int>(nullable: false),
+                    Street = table.Column<string>(nullable: true),
+                    Neighborhood = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    waitEvent = table.Column<bool>(nullable: false),
+                    confirmEvent = table.Column<bool>(nullable: false),
+                    OrganizerId = table.Column<string>(nullable: false),
                     SportId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Events_AspNetUsers_OrganizerId",
+                        name: "OrganizerId",
                         column: x => x.OrganizerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Events_SportGames_SportId",
                         column: x => x.SportId,
                         principalTable: "SportGames",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EventAddresses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Street = table.Column<string>(nullable: false),
-                    Number = table.Column<int>(nullable: false),
-                    Complement = table.Column<string>(nullable: true),
-                    Neighbourhood = table.Column<string>(nullable: false),
-                    City = table.Column<string>(nullable: false),
-                    State = table.Column<string>(nullable: false),
-                    ZipCode = table.Column<string>(nullable: false),
-                    EventId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventAddresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EventAddresses_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -288,14 +242,12 @@ namespace DataIdentity.Migrations
                         name: "FK_UserEvents_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserEvents_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -338,12 +290,6 @@ namespace DataIdentity.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventAddresses_EventId",
-                table: "EventAddresses",
-                column: "EventId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",
                 table: "Events",
                 column: "OrganizerId");
@@ -357,11 +303,6 @@ namespace DataIdentity.Migrations
                 name: "IX_friendsLists_ApplicationUserId",
                 table: "friendsLists",
                 column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserAddresses_UserId",
-                table: "UserAddresses",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserEvents_EventId",
@@ -387,13 +328,7 @@ namespace DataIdentity.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EventAddresses");
-
-            migrationBuilder.DropTable(
                 name: "friendsLists");
-
-            migrationBuilder.DropTable(
-                name: "UserAddresses");
 
             migrationBuilder.DropTable(
                 name: "UserEvents");

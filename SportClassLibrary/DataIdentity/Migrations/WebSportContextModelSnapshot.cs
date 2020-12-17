@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+
 namespace DataIdentity.Migrations
 {
     [DbContext(typeof(WebSportContext))]
@@ -120,8 +121,11 @@ namespace DataIdentity.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Day")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -129,7 +133,11 @@ namespace DataIdentity.Migrations
                     b.Property<int>("MaxParticipants")
                         .HasColumnType("int");
 
+                    b.Property<string>("Neighborhood")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OrganizerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SportId")
@@ -138,6 +146,18 @@ namespace DataIdentity.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("confirmEvent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("numbParticipants")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("waitEvent")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrganizerId");
@@ -145,50 +165,6 @@ namespace DataIdentity.Migrations
                     b.HasIndex("SportId");
 
                     b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("Domain.Table.EventAddress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Complement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Neighbourhood")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.ToTable("EventAddresses");
                 });
 
             modelBuilder.Entity("Domain.Table.FriendsList", b =>
@@ -223,49 +199,6 @@ namespace DataIdentity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SportGames");
-                });
-
-            modelBuilder.Entity("Domain.Table.UserAddress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Complement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Neighbourhood")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAddresses");
                 });
 
             modelBuilder.Entity("Domain.Table.UserEvent", b =>
@@ -422,20 +355,14 @@ namespace DataIdentity.Migrations
                 {
                     b.HasOne("Domain.Models.ApplicationUser", "Organizer")
                         .WithMany("MyEvents")
-                        .HasForeignKey("OrganizerId");
+                        .HasForeignKey("OrganizerId")
+                        .HasConstraintName("OrganizerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Table.SportGame", "SportGame")
                         .WithMany("Events")
                         .HasForeignKey("SportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Table.EventAddress", b =>
-                {
-                    b.HasOne("Domain.Table.Event", "Event")
-                        .WithOne("Address")
-                        .HasForeignKey("Domain.Table.EventAddress", "EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -450,17 +377,10 @@ namespace DataIdentity.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Table.UserAddress", b =>
-                {
-                    b.HasOne("Domain.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Domain.Table.UserEvent", b =>
                 {
                     b.HasOne("Domain.Table.Event", "Event")
-                        .WithMany("Calendar")
+                        .WithMany()
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

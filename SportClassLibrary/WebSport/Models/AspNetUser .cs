@@ -17,7 +17,7 @@ namespace WebSport.Models
         }
 
         public string Name => _accessor.HttpContext.User.Identity.Name;
-
+       
         public IEnumerable<Claim> GetClaimsIdentity()
         {
             return _accessor.HttpContext.User.Claims;
